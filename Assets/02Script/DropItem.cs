@@ -58,8 +58,14 @@ public class DropItem : MonoBehaviour
 
         if(isDrop && other.CompareTag("Player"))
         {
-            Debug.Log("æ∆¿Ã≈€ Ω¿µÊ");
-            Destroy(gameObject);
+            InventoryItemData newData = new InventoryItemData();
+            newData.itemID = 1001;
+            newData.amount = 1;
+
+            if(GameManager.Inst.LootingItem(newData))
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }

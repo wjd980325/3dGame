@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;    // 파일 입출력
 
 [System.Serializable]
 public class PlayerData     // 유저가 게임 내에서 만들어낸 데이터 중에서 저장해야되는 데이터들
@@ -33,6 +34,10 @@ public class GameManager : Singleton<GameManager>   // 템플릿 문법
         base.Awake();
 
         pData = new PlayerData();
+        dataPath = Application.persistentDataPath + "/Save";
+
+
+        CreateUserData("aaa");
 
         // 테이블 동적 로딩하여 자료구조에 맞게 데이터 파싱
         #region _TableData_
@@ -55,17 +60,89 @@ public class GameManager : Singleton<GameManager>   // 템플릿 문법
     private Dictionary<int, ItemData_Entity> dicItemData = new Dictionary<int, ItemData_Entity>();
     private Dictionary<int, MonsterData_Entity> dicMonsterData = new Dictionary<int, MonsterData_Entity>();
 
+    public bool GetItemData(int itemID, out ItemData_Entity data)
+    {
+        return dicItemData.TryGetValue(itemID, out data);
+    }
+
+    public bool GetMonsterData(int monsterID, out MonsterData_Entity data)
+    {
+        return dicMonsterData.TryGetValue(monsterID, out data);
+    }
+
+
     // JSON
     #region _Save&Load_
-
+    private string dataPath;
     public void SaveData()  // 파일로 중요데이터 저장
     {
-
+        string data = JsonUtility.ToJson(pData);
+        File.WriteAllText(dataPath, data);
     }
-    public void LoadData()  // 파일 읽어서 런타임 파싱
+    public bool LoadData()  // 파일 읽어서 런타임 파싱
     {
+        if(File.Exists(dataPath))
+        {
+            string data = File.ReadAllText(dataPath);
+            pData = JsonUtility.FromJson<PlayerData>(data);
+            return true;
+        }
+        return false;
+    }
+    public void DeleteData()
+    {
+        File.Delete(dataPath);
+    }
 
+    public bool CheckData()
+    {
+        if(File.Exists(dataPath))
+        {
+            return LoadData();
+        }
+        return false;
     }
 
     #endregion
+
+    #region _UserData_
+
+    public void CreateUserData(string newNickName)
+    {
+        pData.userNickName = newNickName;
+        pData.curEXP = 0;
+        pData.gold = 5000;
+        pData.level = 1;
+        pData.curHP = pData.maxHP = 50;
+        pData.curMP = pData.maxMP = 30;
+        pData.uidCounter = 0;
+        pData.inventory = new Inventory();
+    }
+
+    #endregion
+
+    public Inventory INVEN
+    {
+        get => pData.inventory;
+    }
+    public int PlayerUIDMaker
+    {
+        get
+        {
+            return ++pData.uidCounter;
+        }
+    }
+
+    // 아이템 습득 처리 해주는 함수
+    public bool LootingItem(InventoryItemData newItem)
+    {
+        if(!pData.inventory.IsFull())
+        {
+            pData.inventory.AddItem(newItem);
+
+            Debug.Log($"인벤토리 내 아이템 갯수 : {pData.inventory.CurItemCount}");
+            return true;
+        }
+        return false;
+    }
 }
