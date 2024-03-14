@@ -70,6 +70,15 @@ public class GameManager : Singleton<GameManager>   // 템플릿 문법
         return dicMonsterData.TryGetValue(monsterID, out data);
     }
 
+    public int GetNextEXPData(int curLevel)
+    {
+        if(table.LevelEXP.Count < curLevel)
+        {
+            return -1;  // 테이블 없음
+        }
+        return table.LevelEXP[curLevel - 1].nextEXP;
+    }
+
 
     // JSON
     #region _Save&Load_
@@ -121,6 +130,7 @@ public class GameManager : Singleton<GameManager>   // 템플릿 문법
 
     #endregion
 
+    #region _PlayerDataGetter_
     public Inventory INVEN
     {
         get => pData.inventory;
@@ -132,6 +142,39 @@ public class GameManager : Singleton<GameManager>   // 템플릿 문법
             return ++pData.uidCounter;
         }
     }
+    public int PlayerGold
+    {
+        get => pData.gold;  // 읽기 가능
+        set => pData.gold = value;  // 쓰기 가능
+    }
+    public string PlayerName
+    {
+        get => pData.userNickName;  // 읽기 가능
+    }
+    public int PlayerLevel => pData.level;
+    public int PlayerCurrentEXP => pData.curEXP;
+    public void AddEXP(int addEXP)
+    {
+        pData.curEXP += addEXP;
+        if(pData.curEXP >= GetNextEXPData(pData.level))    // 레벨업이 가능하다면
+        {
+            LevelUPProcess();
+        }
+
+        // UI 갱신처리
+    }
+
+    private void LevelUPProcess()
+    {
+        pData.curEXP -= GetNextEXPData(pData.level);
+        pData.level++;
+        pData.maxHP += Random.Range(5, 10);
+        pData.maxMP += Random.Range(10, 20);
+    }
+
+
+
+    #endregion
 
     // 아이템 습득 처리 해주는 함수
     public bool LootingItem(InventoryItemData newItem)

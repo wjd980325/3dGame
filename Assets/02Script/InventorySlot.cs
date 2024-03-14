@@ -44,7 +44,7 @@ public class InventorySlot : MonoBehaviour
         if(GameManager.Inst.GetItemData(itemData.itemID, out ItemData_Entity data))
         {
             // 동적 로딩을 통해서 아이콘 변경
-            //icon.sprite = 
+            icon.sprite = Resources.Load<Sprite>(data.iconImg);
             icon.enabled = true;
             ChangeAmount(itemData.amount);
             isEmpty = false;
@@ -55,23 +55,37 @@ public class InventorySlot : MonoBehaviour
     // 소유했던 아이템이 없어졌을때 슬롯을 빈칸으로 변경해주는 메소드
     public void ClearSlot()
     {
-
+        isSelect = false;   // 선택안된상태
+        isEmpty = true;     // 빈슬롯
+        focus.SetActive(false);     // 선택 아이콘 안보이게
+        amount.enabled = false;     // 수량 text 안보이게
+        icon.enabled = false;       // 아이콘 안보이게
     }
 
     // 중첩 아이템의 보유 갯수를 변경해주는 메소드
     public void ChangeAmount(int newAmount)
     {
-
+        if (newAmount < 2)
+            amount.enabled = false;
+        else
+        {
+            amount.enabled = true;
+            amount.text = newAmount.ToString();
+        }
     }
 
     // 슬롯 선택 여부를 변경하는 함수
     public void SetSelectSlot(bool isSelect)
     {
-
+        focus.SetActive(isSelect);
     }
 
     public void OnClick_Select()
     {
-
+        if(!isEmpty)
+        {
+            isSelect = !isSelect;
+            SetSelectSlot(isSelect);
+        }
     }
 }

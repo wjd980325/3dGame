@@ -9,6 +9,9 @@ public class UIManager : MonoBehaviour, IObserverUI
     private GameObject obj;
     private Image hpFill;
     private Image mpFill;
+    private GameObject inventoryObj;
+    private InventoryUI inventoryUI;
+    private bool inventoryIsOpen;
 
     private void Start()
     {
@@ -45,6 +48,16 @@ public class UIManager : MonoBehaviour, IObserverUI
                 subUI.Attach(this);
             }
         }
+
+        if(inventoryObj == null)
+        {
+            inventoryObj = GameObject.Find("Inventory");
+            if (inventoryObj && !inventoryObj.TryGetComponent<InventoryUI>(out inventoryUI))
+                Debug.Log("UIManager.cs - InitUIManager() - inventoryUI 참조 실패");
+
+            inventoryObj.LeanScale(Vector3.zero, 0.1f);
+            inventoryIsOpen = false;
+        }
     }
 
     public void UpdateUI(MyCharState charState)
@@ -54,5 +67,17 @@ public class UIManager : MonoBehaviour, IObserverUI
 
         if (mpFill != null)
             mpFill.fillAmount = charState.CurrentMP / charState.MaxMP;
+    }
+
+    public void ShowInventory()
+    {
+        inventoryIsOpen = !inventoryIsOpen;
+        if (inventoryIsOpen)
+        {
+            inventoryUI.RefreshInventoryUI();   // 슬롯 갱신
+            inventoryObj.LeanScale(Vector3.one, 0.7f).setEase(LeanTweenType.easeInOutElastic);
+        }
+        else
+            inventoryObj.LeanScale(Vector3.zero, 0.7f).setEase(LeanTweenType.easeInOutElastic);
     }
 }
