@@ -7171,6 +7171,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 087bcc815a4e54c42b8a07125f44ebbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shopSlotPrefab: {fileID: 4389404372031552717, guid: c59e51fadf18a4e4fa374ed6c1124fea,
+    type: 3}
+  sellViewContent: {fileID: 78419222}
+  buyViewContent: {fileID: 156128736}
+  balanceText: {fileID: 639574464}
+  tradeText: {fileID: 176350612}
+  sellTapBtn: {fileID: 1564775241}
+  buyTapBtn: {fileID: 682943917}
+  tradeBtn: {fileID: 355060734}
+  sellView: {fileID: 1106170065}
+  buyView: {fileID: 1317756352}
 --- !u!114 &1987872316
 MonoBehaviour:
   m_ObjectHideFlags: 0
