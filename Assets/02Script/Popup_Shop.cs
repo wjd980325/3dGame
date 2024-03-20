@@ -52,6 +52,8 @@ public class Popup_Shop : MonoBehaviour, IPopupBase
                 shopSlot.CreateSlot(this, i);   // 슬롯의 인덱스 부여
                 shopSlot.gameObject.name = $"SellSlot_{i}";
                 // 델리게이트 이벤트 등록
+                shopSlot.OnTotalChange += CalculateGold;
+
                 sellSlotList.Add(shopSlot);
             }
         }
@@ -63,6 +65,8 @@ public class Popup_Shop : MonoBehaviour, IPopupBase
             {
                 shopSlot.CreateSlot(this, i);
                 shopSlot.gameObject.name = $"BuySlot_{i}";
+                shopSlot.OnTotalChange += CalculateGold;
+
                 buySlotList.Add(shopSlot);
             }
         }
@@ -70,6 +74,9 @@ public class Popup_Shop : MonoBehaviour, IPopupBase
         sellTapBtn.onClick.AddListener(OnClick_SellTap);
         buyTapBtn.onClick.AddListener(OnClick_BuyTap);
         tradeBtn.onClick.AddListener(OnClick_ApplyBtn);
+
+        totalGold = 0;
+        RefreshGold();
     }
 
     private int totalGold;
@@ -79,6 +86,7 @@ public class Popup_Shop : MonoBehaviour, IPopupBase
         // totalGold 계산
 
         tradeText.text = totalGold.ToString();
+        balanceText.text = GameManager.Inst.PlayerGold.ToString();
     }
 
     public void CalculateGold()
@@ -105,6 +113,7 @@ public class Popup_Shop : MonoBehaviour, IPopupBase
                 }
             }
         }
+        RefreshGold();
     }
 
     // 인벤토리에 있는 데이터 참조해서 상점 슬롯에 데이터를 갱신
@@ -125,7 +134,7 @@ public class Popup_Shop : MonoBehaviour, IPopupBase
             }
         }
         totalGold = 0;
-        tradeText.text = "0";
+        RefreshGold();
     }
 
     InventoryItemData tempData = new InventoryItemData();
@@ -138,6 +147,8 @@ public class Popup_Shop : MonoBehaviour, IPopupBase
             tempData.amount = 999;      // 상점으로부터 한꺼번에 구매할 수 있는 최대 갯수
             buySlotList[i].RefreshSlot(tempData);
         }
+        totalGold = 0;
+        RefreshGold();
     }
 
     public void OnClick_SellTap()
@@ -153,9 +164,52 @@ public class Popup_Shop : MonoBehaviour, IPopupBase
         buyView.SetActive(true);
         sellView.SetActive(false);
     }
+
+    int itemID, tradeCount, tradeGold;
     public void OnClick_ApplyBtn()
     {
+        if(sellView.activeSelf)     // 판매탭 열림
+        {
+            for(int i = inventory.CurItemCount - 1; i >= 0; i--)
+            {
+                sellSlotList[i].GetSellCount(out itemID, out tradeCount, out tradeGold);
+                GameManager.Inst.PlayerGold += tradeGold;   // 골드 증가
 
+                InventoryItemData tradeData = new InventoryItemData();
+                tradeData.itemID = itemID;
+                tradeData.amount = tradeCount;
+                inventory.DeleteItem(tradeData);    // 아이템 삭제
+            }
+            OnClick_SellTap();      // 판매탭 갱신
+        }
+        else     // 구매탭 열림
+        {
+            totalGold = 0;
+
+            for(int i = 0; i < 4; i++)
+            {
+                buySlotList[i].GetBuyCount(out itemID, out tradeCount, out tradeGold);
+                totalGold += tradeGold;
+            }
+
+            if (totalGold <= GameManager.Inst.PlayerGold)    // 플레이어 잔액이 거래하려고 등록한 금액보다 작다면
+            {
+                GameManager.Inst.PlayerGold -= totalGold;   // 비용 지불
+
+                for(int i = 0; i < 4; i++)
+                {
+                    buySlotList[i].GetBuyCount(out itemID, out tradeCount, out tradeGold);
+                    if(tradeCount > 0)
+                    {
+                        InventoryItemData tradeData = new InventoryItemData();
+                        tradeData.itemID = itemID;
+                        tradeData.amount = tradeCount;
+                        inventory.AddItem(tradeData);
+                    }
+                }
+            }
+            OnClick_BuyTap();   // 상점창 갱신
+        }
     }
 
 
@@ -167,7 +221,7 @@ public class Popup_Shop : MonoBehaviour, IPopupBase
     public void PopupOpen()
     {
         // 상태값을 갱신
-        RefreshBuyViewData();
+        OnClick_BuyTap();
         gameObject.LeanScale(Vector3.one, 0.7f).setEase(LeanTweenType.easeInOutElastic);
     }
 }

@@ -32,7 +32,22 @@ public class ShopSlot : MonoBehaviour
     public int SlotIndex => slotIndex;
 
     private int totalGold;
-    public int TotalGold => totalGold;
+    public int TotalGold
+    {
+        get => totalGold;
+        set
+        {
+            totalGold = value;
+            if(OnTotalChange != null)
+            {
+                OnTotalChange();
+                //OnTotalChange.Invoke();
+            }
+        }
+    }
+
+    public delegate void TotalGoldChange();     // 대리자
+    public event TotalGoldChange OnTotalChange; // 이벤트
 
     private int tradeGold;      // 1개 거래 금액(단가)
     private int sellMaxCount;   // 거래 가능한 최대 갯수
@@ -83,10 +98,10 @@ public class ShopSlot : MonoBehaviour
         _buyItemCount = curCount;
         _buyGold = totalGold;
         
-        curCount = 0;
-
-        tradeCount.text = curCount.ToString();
-        totalGold = curCount * tradeGold;
+        //curCount = 0;
+        //TotalGold = 0;
+        //tradeCount.text = curCount.ToString();
+        //TotalGold = curCount * tradeGold;
 
         // 부모인 ItemShop Popup에 금액을 알려줘야함
 
@@ -99,11 +114,11 @@ public class ShopSlot : MonoBehaviour
         _sellItemID = itemID;
         _sellItemCount = curCount;
         _sellGold = totalGold;
-        sellMaxCount -= curCount;
-        curCount = 0;
 
-        tradeCount.text = curCount.ToString();
-        totalGold = curCount * tradeGold;
+        //sellMaxCount -= curCount;
+        //curCount = 0;
+        //tradeCount.text = curCount.ToString();
+        //TotalGold = curCount * tradeGold;
 
         // 부모인 ItemShop Popup에 금액을 알려줘야함
 
@@ -116,7 +131,7 @@ public class ShopSlot : MonoBehaviour
             curCount--;
 
         tradeCount.text = curCount.ToString();
-        totalGold = curCount * tradeGold;
+        TotalGold = curCount * tradeGold;
 
         // 부모인 ItemShop Popup에 금액을 알려줘야함
     }
@@ -126,7 +141,7 @@ public class ShopSlot : MonoBehaviour
             curCount++;
 
         tradeCount.text = curCount.ToString();
-        totalGold = curCount * tradeGold;
+        TotalGold = curCount * tradeGold;
 
         // 부모인 ItemShop Popup에 금액을 알려줘야함
     }
@@ -134,7 +149,7 @@ public class ShopSlot : MonoBehaviour
     {   // 사과를 50 => 거래가능 갯수도 50
         curCount = sellMaxCount;
         tradeCount.text = curCount.ToString();
-        totalGold = curCount * tradeGold;
+        TotalGold = curCount * tradeGold;
 
         // 부모인 ItemShop Popup에 금액을 알려줘야함
     }
