@@ -7678,6 +7678,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab2bfb6acdcb3d94f86adbdd5b1be6e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  forgeSlotPrefab: {fileID: 3619895877665761114, guid: 2afb7f64aebffaa45b5e8f5a244e5274,
+    type: 3}
+  contentRect: {fileID: 811995339}
+  iconImg: {fileID: 1953445217}
+  enchantInfo: {fileID: 1789271282}
+  enchantPrice: {fileID: 569301779}
+  playerBalance: {fileID: 1997027176}
+  tryBtn: {fileID: 309182539}
 --- !u!1 &1812072685
 GameObject:
   m_ObjectHideFlags: 0

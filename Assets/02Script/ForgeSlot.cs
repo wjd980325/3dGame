@@ -40,7 +40,8 @@ public class ForgeSlot : MonoBehaviour
     {
         if(!isFocus)
         {
-            OnSelectData(data);
+            if(OnSelectData != null)
+                OnSelectData(data);
             IsFocus = true;
         }
     }

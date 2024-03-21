@@ -168,6 +168,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e487edc592e2a54aa121f0c1e83129e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  icon: {fileID: 3619895878328308505}
+  focus: {fileID: 3619895877630921199}
 --- !u!114 &3619895877665761116
 MonoBehaviour:
   m_ObjectHideFlags: 0

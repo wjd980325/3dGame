@@ -77,7 +77,7 @@ public class Inventory
     // 현 인벤토리에 이미 중복된 아이템이 있다면 몇번째 슬롯에 있는지 index를 리턴
     private int FindItemIndex(InventoryItemData newItem)
     {
-        for(int i = items.Count -1; i >= 0; i++)
+        for(int i = items.Count -1; i >= 0; i--)
         {
             if(items[i].itemID == newItem.itemID)
             {
