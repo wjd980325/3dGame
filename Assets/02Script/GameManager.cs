@@ -1,7 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.IO;    // 파일 입출력
+
+public enum SceneName
+{
+    IntroScene,
+    LoadingScene,
+    BaseTown,
+    BattleScene,
+    BossScene,
+    TitleScene,
+}
+
 
 [System.Serializable]
 public class PlayerData     // 유저가 게임 내에서 만들어낸 데이터 중에서 저장해야되는 데이터들
@@ -54,6 +66,19 @@ public class GameManager : Singleton<GameManager>   // 템플릿 문법
         {
             dicMonsterData.Add(table.MonsterData[i].id, table.MonsterData[i]);
         }
+
+        for(int i = 0; i < table.TipMess.Count; i++)
+        {
+            if (table.TipMess[i].sceneName == SceneName.BaseTown.ToString())
+                baseTownTip.Add(table.TipMess[i]);
+
+            if (table.TipMess[i].sceneName == SceneName.BattleScene.ToString())
+                battleTip.Add(table.TipMess[i]);
+
+            if (table.TipMess[i].sceneName == SceneName.BossScene.ToString())
+                bossSceneTip.Add(table.TipMess[i]);
+        }
+
         #endregion
     }
     private ActionGame table;
@@ -79,6 +104,35 @@ public class GameManager : Singleton<GameManager>   // 템플릿 문법
         return table.LevelEXP[curLevel - 1].nextEXP;
     }
 
+    private List<TipData_Entity> battleTip = new List<TipData_Entity>();
+    private List<TipData_Entity> baseTownTip = new List<TipData_Entity>();
+    private List<TipData_Entity> bossSceneTip = new List<TipData_Entity>();
+    private int randvalue;
+
+    public string GetTipMessage(SceneName sceneName)
+    {
+        string result = "";
+        switch(sceneName)
+        {
+            case SceneName.BattleScene:
+                randvalue = Random.Range(0, battleTip.Count);
+                result = battleTip[randvalue].tipText;
+                break;
+            case SceneName.BossScene:
+                randvalue = Random.Range(0, bossSceneTip.Count);
+                result = battleTip[randvalue].tipText;
+                break;
+            case SceneName.BaseTown:
+                randvalue = Random.Range(0, baseTownTip.Count);
+                result = battleTip[randvalue].tipText;
+                break;
+
+            default:
+                result = "과도한 게임은 일상 생활에 지장을 줄 수 있습니다.";
+                break;
+        }
+        return result;
+    }
 
     // JSON
     #region _Save&Load_
@@ -120,7 +174,7 @@ public class GameManager : Singleton<GameManager>   // 템플릿 문법
     {
         pData.userNickName = newNickName;
         pData.curEXP = 0;
-        pData.gold = 5000;
+        pData.gold = 50000;
         pData.level = 1;
         pData.curHP = pData.maxHP = 50;
         pData.curMP = pData.maxMP = 30;
@@ -188,4 +242,17 @@ public class GameManager : Singleton<GameManager>   // 템플릿 문법
         }
         return false;
     }
+
+    #region SceneManager
+
+    private SceneName nextSceneName;
+    public SceneName NextScene => nextSceneName;
+
+    public void AsyncLoadNextScene(SceneName scene)
+    {
+        nextSceneName = scene;
+        SceneManager.LoadScene(SceneName.LoadingScene.ToString());    //
+    }
+
+    #endregion
 }
