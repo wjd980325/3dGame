@@ -15,7 +15,7 @@ public class IntroManager : MonoBehaviour
         Invoke("AutoNextScene", 4f);
     }
 
-    private void AutoNextScenen()
+    private void AutoNextScene()
     {
         // 로딩 처리
         GameManager.Inst.AsyncLoadNextScene(SceneName.TitleScene);

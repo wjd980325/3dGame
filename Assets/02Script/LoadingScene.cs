@@ -15,10 +15,10 @@ public class LoadingScene : MonoBehaviour
     private void Awake()
     {
         loadingBar.fillAmount = 0f;
-        StartCoroutine("LoadAsynScene");     // 다음씬 비동기 로딩
+        StartCoroutine("LoadAsyncScene");     // 다음씬 비동기 로딩
     }
 
-    IEnumerator LoadAsynScene()
+    IEnumerator LoadAsyncScene()
     {
         yield return null;
         tipText.text = GameManager.Inst.GetTipMessage(GameManager.Inst.NextScene);
