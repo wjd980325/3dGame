@@ -11,6 +11,11 @@ public class TitleManager : MonoBehaviour
     private GameObject nickNamePopup;
     private bool havePlayerInfo;
 
+    private void Awake()
+    {
+        InitTitleScene();
+    }
+
     // 세이브 파일의 유무를 확인하고 그에 따른 텍스트들 활성화
     private void InitTitleScene()
     {
@@ -52,13 +57,42 @@ public class TitleManager : MonoBehaviour
 
     public void CreateUserInfo()
     {
-        if(newNickName.Length >= 2)    // 욕설 필터링, 형식에 대한 필터링
+        if(null != newNickName && newNickName.Length >= 2)    // 욕설 필터링, 형식에 대한 필터링
         {
-
+            LeanTween.scale(nickNamePopup, Vector3.zero, 0.7f).setEase(LeanTweenType.easeOutElastic);
+            GameManager.Inst.CreateUserData(newNickName);
+            GameManager.Inst.SaveData();    // 파일저장
+            InitTitleScene();
+            welcomeText.enabled = true;
         }
         else
         {
             // 경고 발생
+            WarningTEXT();
         }
     }
+
+    #region WarningText
+
+    [SerializeField]
+    TextMeshProUGUI waningText;
+
+    void WarningTEXT()
+    {
+        Color fromColor = Color.red;
+        Color toColor = Color.red;
+        fromColor.a = 0f;
+        toColor.a = 1f;
+
+        LeanTween.value(waningText.gameObject, UpdateValue, fromColor, toColor, 1f).setEase(LeanTweenType.easeInQuad);
+        LeanTween.value(waningText.gameObject, UpdateValue, toColor, fromColor, 1f).setDelay(1.5f).setEase(LeanTweenType.easeInQuad);
+
+    }
+
+    void UpdateValue(Color value)
+    {
+        waningText.color = value;
+    }
+
+    #endregion
 }
