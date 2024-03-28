@@ -11,10 +11,10 @@ public class MonsterScan : MonoBehaviour
 
     private void Awake()
     {
-        if(!transform.root.TryGetComponent<MonsterAI>(out monsterAI))
+        /*if(!transform.root.TryGetComponent<MonsterAI>(out monsterAI))
         {
             Debug.Log("MonsterScan.cs - Awake() - monsterAI 참조 실패");
-        }
+        }*/
 
         if(TryGetComponent<SphereCollider>(out col))
         {

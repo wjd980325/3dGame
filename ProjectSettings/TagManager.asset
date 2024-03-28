@@ -13,11 +13,11 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Player
+  - Enermy
+  - Projectile
+  - DieChar
+  - DropItem
   - 
   - 
   - 
