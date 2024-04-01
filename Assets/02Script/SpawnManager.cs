@@ -27,7 +27,7 @@ public class SpawnManager : MonoBehaviour
     {
         get
         {
-            if(poolManager = null)
+            if(poolManager == null)
             {
                 TryGetComponent<PoolManager>(out poolManager);
             }
