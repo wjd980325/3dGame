@@ -166,6 +166,7 @@ GameObject:
   - component: {fileID: -2693458899449297912}
   - component: {fileID: -6585751525546513915}
   - component: {fileID: -6906947320004167503}
+  - component: {fileID: 4408802012496138576}
   m_Layer: 7
   m_Name: Monster Cyclopes
   m_TagString: Untagged
@@ -235,6 +236,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90a467fb05273754484e2e361dfd8645, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackTrans: {fileID: 6913806971480832383}
   poolName: 
 --- !u!114 &-6585751525546513915
 MonoBehaviour:
@@ -270,6 +272,25 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &4408802012496138576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6909006032191697119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 733f4e1ff483611408f4a8d4fc9202ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pools:
+  - _name: Projectile
+    _component: {fileID: 6918738320934101956, guid: ec8a941a0bcd8164c88764bce5def483,
+      type: 3}
+    _count: 2
+    _container: {fileID: 0}
+    _nonLazy: 1
 --- !u!1 &6909072807591064073
 GameObject:
   m_ObjectHideFlags: 0

@@ -127,6 +127,36 @@ public class MonsterBase : MonoBehaviour, IDamage, IPoolObject
         }
     }
 
+    private Projectile projectile;
+    [SerializeField]
+    private Transform attackTrans;
+    private PoolManager poolManager;
+    public PoolManager PoolMGR
+    {
+        get
+        {
+            if(poolManager == null)
+            {
+                TryGetComponent<PoolManager>(out poolManager);
+            }
+            return poolManager;
+        }
+    }
+
+    public void AnimEvent_SpawnProjectile()
+    {
+        projectile = PoolMGR.GetFromPool<Projectile>(0);
+        projectile.transform.position = attackTrans.position;
+        projectile.transform.LookAt(attackTrans.position + transform.forward);
+
+        projectile.InitProjectile(transform.forward,
+                                    10f,
+                                    10f,
+                                    state.attackDamage,
+                                    transform.tag,
+                                    PoolMGR);
+    }
+
     [SerializeField]
     private string poolName;
     public string PoolName => poolName;

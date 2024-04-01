@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MyCharState : MonoBehaviour, ISubjectUI
+public class MyCharState : MonoBehaviour, ISubjectUI, IDamage
 {
     private float currentHP;
     public float CurrentHP
@@ -71,5 +71,22 @@ public class MyCharState : MonoBehaviour, ISubjectUI
             CurrentMP -= 10f;
 
 
+    }
+
+    public void TakeDamage(int damage)
+    {
+        if(currentHP > 0)
+        {
+            CurrentHP -= damage;
+            Debug.Log("플레이어 피격");
+            if(currentHP < 1)
+            {
+                // 사망처리
+            }
+            else
+            {
+                // 피격처리
+            }
+        }
     }
 }

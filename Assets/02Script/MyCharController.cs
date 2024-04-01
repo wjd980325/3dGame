@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Redcode.Pools;
 
 [RequireComponent(typeof(CapsuleCollider))]
 [RequireComponent(typeof(Rigidbody))]
@@ -79,5 +80,38 @@ public class MyCharController : MonoBehaviour
         {
             rig.MovePosition(rig.position + move * moveSpeed * Time.fixedDeltaTime);
         }
+    }
+
+    [SerializeField]
+    private Transform attackTransform;
+    private PoolManager poolManager;
+    public PoolManager PoolMGR
+    {
+        get
+        {
+            if(poolManager == null)
+            {
+                TryGetComponent<PoolManager>(out poolManager);
+            }
+            return poolManager;
+        }
+    }
+    private Projectile projectile;
+
+
+    public void AnimEvent_SpawnProjectile()
+    {
+        Debug.Log("애니매이션");
+        projectile = PoolMGR.GetFromPool<Projectile>(0);
+        projectile.transform.position = attackTransform.position;
+        // 스폰 위치 + 캐릭터 정면 방향
+        projectile.transform.LookAt(attackTransform.position + transform.forward);
+
+        projectile.InitProjectile(transform.forward,
+                                    12.0f,
+                                    10.0f,
+                                    50,
+                                    transform.tag,
+                                    PoolMGR);
     }
 }
