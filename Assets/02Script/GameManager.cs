@@ -255,4 +255,27 @@ public class GameManager : Singleton<GameManager>   // ÅÛÇÃ¸´ ¹®¹ý
     }
 
     #endregion
+
+
+    private MyCharController myController;
+    public MyCharController MyController
+    {
+        get
+        {
+            if(myController == null)
+            {
+                myController = FindFirstObjectByType<MyCharController>();
+            }
+            return myController;
+        }
+    }
+
+    public void AttackBtnEvent()
+    {
+        if(MyController != null)
+        {
+            MyController.TryAttack();
+        }
+    }
+
 }

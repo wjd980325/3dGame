@@ -56,7 +56,7 @@ public class MyCharController : MonoBehaviour
         move.z += joystick.Vertical;
         move = move.normalized;
 
-        isAttack = Input.GetKeyDown(KeyCode.Space);
+        //isAttack = Input.GetKeyDown(KeyCode.Space);  // 테스트
     }
 
     private void Locomotion()   // 이동이나 회전 등을 처리
@@ -71,7 +71,20 @@ public class MyCharController : MonoBehaviour
 
         // 조이스틱 혹은 스킬공격버튼들 ui적인 트리거로 변경
         if (isAttack)
+        {
             anims.SetTrigger(animParam_Attack01);
+            isAttack = false;
+        } 
+    }
+
+    float lastAttackTime = 0;
+    public void TryAttack()
+    {
+        if(!isAttack && lastAttackTime < Time.time)
+        {
+            isAttack = true;
+            lastAttackTime = Time.time + 2f;    // 공격 딜레이 2초
+        }
     }
 
     private void FixedUpdate()

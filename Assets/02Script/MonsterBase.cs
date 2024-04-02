@@ -38,8 +38,9 @@ public class MonsterBase : MonoBehaviour, IDamage, IPoolObject
         ownerSpawner = newSpawn;
 
         material.color = Color.white;
+        gameObject.layer = LayerMask.NameToLayer("Enermy");  // 오브젝트 풀을 통해서 
 
-        if(TryGetComponent<MonsterAI>(out monsterAI))
+        if (TryGetComponent<MonsterAI>(out monsterAI))
         {
             monsterAI.StartAI();
         }
@@ -106,10 +107,10 @@ public class MonsterBase : MonoBehaviour, IDamage, IPoolObject
         anims.SetTrigger(animHash_Die);
         monsterAI.ChangeAIState(AI_State.Die);
         material.color = Color.gray;
-        gameObject.layer = LayerMask.NameToLayer("Die");
+        gameObject.layer = LayerMask.NameToLayer("DieChar");
 
 
-        yield return YieldInstructionCache.WaitForSeconds(2f);
+        yield return YieldInstructionCache.WaitForSeconds(1.5f);
         // 풀에 반환
         ownerSpawner.ReturnPool(this);
     }
